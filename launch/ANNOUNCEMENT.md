@@ -1,0 +1,1 @@
+Monad Pet is a tamagotchi that lives on Monad. You adopt a small round blob with big eyes and feed it $CHOMP. Send transactions and the pet gets fat and happy. Leave the wallet idle and it turns peckish, then starving. Skip a few blocks and it takes that personally. Hunger is the number of blocks since your last transaction. It runs on Monad testnet. Join the waitlist.
