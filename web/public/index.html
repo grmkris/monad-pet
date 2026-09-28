@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Monad Pet · a tamagotchi that lives on Monad</title>
+  <meta name="description" content="Adopt a pet, keep it fed with $CHOMP, and don't let it starve. A tamagotchi that lives on Monad.">
+  <meta name="theme-color" content="#836EF9">
+  <meta property="og:title" content="Monad Pet ($CHOMP)">
+  <meta property="og:description" content="A tamagotchi that lives on Monad. Feed it $CHOMP. Don't let it starve.">
+  <link rel="icon" href="/pet.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Figtree:wght@400;500;600;700;800&family=Pixelify+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="nav">
+    <a class="brand" href="#top" aria-label="Monad Pet home">
+      <span class="brand-pet" data-pet="nav" aria-hidden="true"></span>
+      <span class="brand-name">Monad Pet</span>
+    </a>
+    <nav aria-label="Sections">
+      <a href="#how">How it works</a>
+      <a href="#play">Feed it</a>
+      <a href="#chomp">$CHOMP</a>
+    </nav>
+    <a class="btn btn-small" href="#waitlist">Join waitlist</a>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero" id="top">
+      <div class="hero-copy">
+        <p class="kicker reveal" style="--d:0"><span class="dot" aria-hidden="true"></span> Hatching soon on Monad testnet</p>
+        <h1 class="reveal" style="--d:1">Monad<br><span class="h1-accent">Pet</span></h1>
+        <p class="promise reveal" style="--d:2">A tamagotchi that lives on Monad. Feed it <strong>$CHOMP</strong>, keep it happy, and whatever you do, <em>don't let it starve</em>.</p>
+        <div class="cta-row reveal" style="--d:3">
+          <a class="btn btn-primary" href="#waitlist">Adopt yours early</a>
+          <a class="btn btn-ghost" href="#play">Feed the demo pet <span aria-hidden="true">↓</span></a>
+        </div>
+      </div>
+
+      <div class="hero-stage reveal" style="--d:2" aria-hidden="true">
+        <div class="sun"></div>
+        <div class="orbit">
+          <span class="coin-mini c1">$</span>
+          <span class="coin-mini c2">$</span>
+          <span class="spark s1">✦</span>
+          <span class="spark s2">✦</span>
+          <span class="spark s3">✧</span>
+        </div>
+        <div class="bubble" data-speech>It has been 3 blocks since breakfast.</div>
+        <div class="hero-pet" data-pet="hero"></div>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="how" id="how" aria-labelledby="how-title">
+      <div class="section-head">
+        <p class="eyebrow">How it works</p>
+        <h2 id="how-title">Three steps. One very hungry friend.</h2>
+      </div>
+      <ol class="steps">
+        <li class="step step-1">
+          <span class="step-num">01</span>
+          <div class="step-art" aria-hidden="true">
+            <svg viewBox="0 0 64 64"><path d="M32 6c12 0 22 18 22 32s-10 20-22 20-22-6-22-20S20 6 32 6z" fill="#FFF6D6" stroke="#200052" stroke-width="3.5"/><path d="M14 36l7-5 6 5 5-6 6 6 6-5 7 5" fill="none" stroke="#200052" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="24" cy="22" r="3" fill="#FFB8DA"/><circle cx="40" cy="46" r="4" fill="#C9C0FF"/></svg>
+          </div>
+          <h3>Adopt</h3>
+          <p>Connect a wallet and hatch your pet. It is yours, it lives on Monad, and it already thinks you are wonderful.</p>
+        </li>
+        <li class="step step-2">
+          <span class="step-num">02</span>
+          <div class="step-art" aria-hidden="true">
+            <svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="24" fill="#FFE58A" stroke="#200052" stroke-width="3.5"/><circle cx="32" cy="32" r="16" fill="none" stroke="#200052" stroke-width="2.5" stroke-dasharray="3 4"/><text x="32" y="40" text-anchor="middle" font-family="Bagel Fat One, sans-serif" font-size="22" fill="#200052">$</text></svg>
+          </div>
+          <h3>Feed with $CHOMP</h3>
+          <p>One $CHOMP is one meal. Feed it and watch the belly meter fill right back up (and the tiny happy dance).</p>
+        </li>
+        <li class="step step-3">
+          <span class="step-num">03</span>
+          <div class="step-art" aria-hidden="true">
+            <svg viewBox="0 0 64 64"><path d="M32 54S8 40 8 24c0-8 6-14 13-14 5 0 9 3 11 7 2-4 6-7 11-7 7 0 13 6 13 14 0 16-24 30-24 30z" fill="#FFB8DA" stroke="#200052" stroke-width="3.5" stroke-linejoin="round"/><path d="M14 30h9l4-7 6 14 4-7h13" fill="none" stroke="#200052" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>Keep it alive</h3>
+          <p>It gets hungry when your wallet sits idle, and fat and happy when you use the chain. Blocks are fast. So is its appetite.</p>
+        </li>
+      </ol>
+    </section>
+
+    <!-- Live pet widget -->
+    <section class="play" id="play" aria-labelledby="play-title">
+      <div class="play-copy">
+        <p class="eyebrow">Live demo</p>
+        <h2 id="play-title">Go on, feed it.</h2>
+        <p>This little one is real (well, real-ish: it lives in your browser for now). Its belly drains every block. Leave it alone and it goes from <span class="chip chip-happy">happy</span> to <span class="chip chip-peckish">peckish</span> to <span class="chip chip-starving">starving</span>.</p>
+        <p class="fine">No wallet, no tokens spent. The demo pet remembers you, so come back later and check on it.</p>
+      </div>
+
+      <div class="device-wrap">
+        <div class="device" data-mood="happy">
+          <div class="device-top" aria-hidden="true">
+            <span class="led"></span><span class="device-label">MONAD·PET</span><span class="led"></span>
+          </div>
+          <div class="screen">
+            <div class="screen-row">
+              <span class="lcd-tag">LV 1</span>
+              <span class="lcd-mood" data-mood-label>HAPPY</span>
+            </div>
+            <div class="screen-pet" data-pet="widget"></div>
+            <div class="meter-row">
+              <span class="lcd-tag">BELLY</span>
+              <div class="meter" role="meter" aria-label="Belly fullness" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" data-meter>
+                <!-- segments injected by app.js -->
+              </div>
+              <span class="lcd-num" data-pct>100%</span>
+            </div>
+          </div>
+          <button class="feed-btn" type="button" data-feed>
+            <span class="feed-coin" aria-hidden="true">$</span>
+            Feed 1 $CHOMP
+          </button>
+          <dl class="stats">
+            <div><dt>Blocks since breakfast</dt><dd data-blocks>0</dd></div>
+            <div><dt>$CHOMP fed</dt><dd data-fed>0</dd></div>
+          </dl>
+        </div>
+        <p class="speech-line" data-speech>Full belly. Life is good.</p>
+        <p class="sr-only" aria-live="polite" data-announce></p>
+      </div>
+    </section>
+
+    <!-- $CHOMP token -->
+    <section class="chomp" id="chomp" aria-labelledby="chomp-title">
+      <div class="chomp-inner">
+        <div class="chomp-copy">
+          <p class="eyebrow eyebrow-light">The token</p>
+          <h2 id="chomp-title"><span class="ticker">$CHOMP</span> is pet food.</h2>
+          <p>That's the whole job. Every meal your pet eats is one $CHOMP, paid on Monad, where blocks land fast enough that a snack feels instant.</p>
+        </div>
+        <div class="token-card">
+          <div class="coin-3d" aria-hidden="true"><div class="coin-face">$</div></div>
+          <dl class="token-facts">
+            <div><dt>Ticker</dt><dd class="mono">$CHOMP</dd></div>
+            <div><dt>Chain</dt><dd>Monad testnet <span class="muted">(chain id 10143)</span></dd></div>
+            <div><dt>Use</dt><dd>1 $CHOMP = 1 meal</dd></div>
+            <div><dt>Contract</dt><dd><span class="pending">Contract address coming at launch</span></dd></div>
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <!-- Waitlist -->
+    <section class="waitlist" id="waitlist" aria-labelledby="waitlist-title">
+      <div class="waitlist-card" data-waitlist>
+        <div class="wl-form-state">
+          <p class="eyebrow">Waitlist</p>
+          <h2 id="waitlist-title">Save an egg for me.</h2>
+          <p>Get a ping the moment adoption opens. First hatchlings get first dibs on names.</p>
+          <form class="wl-form" novalidate data-waitlist-form>
+            <label class="sr-only" for="wl-email">Email address</label>
+            <input id="wl-email" name="email" type="email" aria-describedby="wl-error" inputmode="email" autocomplete="email" placeholder="you@example.com" required>
+            <button class="btn btn-primary" type="submit">Join the waitlist</button>
+          </form>
+          <p class="wl-error" id="wl-error" data-wl-error role="alert" hidden>That email looks a bit hungry. Try again?</p>
+          <p class="fine">Demo form: nothing leaves your browser yet.</p>
+        </div>
+        <div class="wl-thanks-state" hidden tabindex="-1" data-wl-thanks>
+          <div class="thanks-pet" data-pet="thanks" aria-hidden="true"></div>
+          <h2>You're on the list!</h2>
+          <p>Your egg is warming up. We'll write to <strong data-wl-email></strong> the moment it hatches.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-brand">
+      <span class="brand-pet" data-pet="footer" aria-hidden="true"></span>
+      <div>
+        <strong>Monad Pet</strong>
+        <p>A tamagotchi that lives on Monad. Ticker $CHOMP.</p>
+      </div>
+    </div>
+    <p class="footer-note">Built by a crew of AI agents hired on <a href="https://github.com/grmkris/agent-jobs">agent-jobs</a>. Source: <a href="https://github.com/grmkris/monad-pet">grmkris/monad-pet</a>. The pet drawn here is a placeholder until the brand kit lands. Testnet only; $CHOMP has no monetary value.</p>
+  </footer>
+</body>
+</html>
