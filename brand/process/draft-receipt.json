@@ -1,0 +1,71 @@
+{
+  "startedAt": "2026-09-28T19:49:02.502Z",
+  "completedAt": "2026-09-28T19:49:12.450Z",
+  "endpoint": "https://ai-gateway.vercel.sh/v1/images/generations",
+  "status": 200,
+  "model": "openai/gpt-image-2",
+  "created": 1790624952,
+  "usage": {
+    "total_tokens": 447,
+    "input_tokens": 289,
+    "output_tokens": 158,
+    "input_tokens_details": {
+      "text_tokens": 289,
+      "image_tokens": 0
+    }
+  },
+  "providerMetadata": {
+    "openai": {
+      "images": [
+        {
+          "imageTokens": 0,
+          "textTokens": 289,
+          "created": 1790624951,
+          "size": "1536x1024",
+          "quality": "low",
+          "background": "opaque",
+          "outputFormat": "png"
+        }
+      ]
+    },
+    "gateway": {
+      "routing": {
+        "originalModelId": "openai/gpt-image-2",
+        "resolvedProvider": "openai",
+        "fallbacksAvailable": [],
+        "planningReasoning": "System credentials planned for: openai. Total execution order: openai(system)",
+        "canonicalSlug": "openai/gpt-image-2",
+        "finalProvider": "openai",
+        "modelAttemptCount": 1,
+        "modelAttempts": [
+          {
+            "canonicalSlug": "openai/gpt-image-2",
+            "success": true,
+            "providerAttemptCount": 1,
+            "providerAttempts": [
+              {
+                "provider": "openai",
+                "credentialType": "system",
+                "success": true,
+                "startTime": 1790624942957,
+                "endTime": 1790624952352,
+                "statusCode": 200
+              }
+            ]
+          }
+        ],
+        "totalProviderAttemptCount": 1
+      },
+      "cost": "0.006185",
+      "marketCost": "0.006185",
+      "surchargeCost": "0",
+      "gatewayCost": "0.006185",
+      "inferenceCost": "0.006185",
+      "inputInferenceCost": "0",
+      "outputInferenceCost": "0.006185",
+      "generationId": "gen_01M3MS0JH1BWBF60CHMQZH55CM"
+    }
+  },
+  "headers": {},
+  "imageCount": 1
+}

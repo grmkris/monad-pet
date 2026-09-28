@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="320" viewBox="0 0 320 320" role="img" aria-labelledby="title desc">
+<title id="title">Monad Pet: starving</title>
+<desc id="desc">Raised inner brows, drooping pupils and an open hungry mouth. The same purple dumpling silhouette.</desc>
+<g stroke="#29213F" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M56 256C24 270 25 296 54 301c24 4 49-7 61-24M264 256c32 14 31 40 2 45-24 4-49-7-61-24" fill="#836EF9"/>
+  <path d="M160 26C78 26 30 78 30 157c0 83 51 132 130 132s130-49 130-132C290 78 242 26 160 26Z" fill="#836EF9"/>
+</g><g fill="#FFF9EF" stroke="#29213F" stroke-width="7"><ellipse cx="106" cy="134" rx="42" ry="47"/><ellipse cx="214" cy="134" rx="42" ry="47"/></g><g fill="#29213F"><ellipse cx="107" cy="153" rx="18" ry="21"/><ellipse cx="213" cy="153" rx="18" ry="21"/></g>
+  <path d="M70 111l70-17M180 94l70 17" stroke="#29213F" stroke-width="9" stroke-linecap="round"/>
+  <path d="M133 234q0-28 27-28t27 28q0 20-27 20t-27-20Z" fill="#29213F"/>
+  <path d="M146 209v13q0 4 4 4h7v-20M164 206v20h7q4 0 4-4v-13" fill="#FFF9EF"/>
+</svg>

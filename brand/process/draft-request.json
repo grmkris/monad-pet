@@ -1,0 +1,7 @@
+{
+  "model": "openai/gpt-image-2",
+  "prompt": "Use case: logo-brand.\nAsset type: raster exploration for a hand-redrawn vector mascot, three draft variations on one landscape contact sheet.\nPrimary request: Monad Pet, a lovable hungry virtual pet on Monad. Explore the chosen two-toothed purple dumpling creature direction. Three visibly different original variations of the SAME simple round pet, evenly spaced left to right, isolated on plain white. No wordmark or text.\nSubject: Small squat round purple body, two huge ivory eyes with dark plum pupils, a wide little dark mouth with two blunt ivory teeth, tiny soft feet; friendly and slightly needy, never scary. Variation one smooth oval dumpling, variation two softly squared handheld-toy dumpling with a small off-center tuft, variation three pear-shaped dumpling. The eyes must dominate. No ears or horns. No arms or props.\nStyle: flat clean vector-like shapes, thick soft dark plum outline, confident minimal geometry, charming retro handheld game character. A mark that reads at 32 pixels. No shading, gradients, 3D, texture, extra accessories, small patterns, sparkles, shadows, watermark or existing character references.\nPalette: Monad purple #836EF9, dark plum #29213F, ivory #FFF9EF, blush #FFC9DA. Keep body purple in every variation. Each silhouette and two-toothed mouth should be very clear. Lots of white space.",
+  "size": "1536x1024",
+  "quality": "low",
+  "n": 1
+}

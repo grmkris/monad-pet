@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="320" viewBox="0 0 320 320" role="img" aria-labelledby="title desc">
+<title id="title">Monad Pet: happy</title>
+<desc id="desc">Open eyes and a broad two-toothed smile. The same purple dumpling silhouette.</desc>
+<g stroke="#29213F" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M56 256C24 270 25 296 54 301c24 4 49-7 61-24M264 256c32 14 31 40 2 45-24 4-49-7-61-24" fill="#836EF9"/>
+  <path d="M160 26C78 26 30 78 30 157c0 83 51 132 130 132s130-49 130-132C290 78 242 26 160 26Z" fill="#836EF9"/>
+</g><g fill="#FFF9EF" stroke="#29213F" stroke-width="7"><ellipse cx="106" cy="134" rx="42" ry="47"/><ellipse cx="214" cy="134" rx="42" ry="47"/></g><g fill="#29213F"><ellipse cx="114" cy="139" rx="18" ry="21"/><ellipse cx="206" cy="139" rx="18" ry="21"/></g><g fill="#FFC9DA"><ellipse cx="65" cy="197" rx="22" ry="12"/><ellipse cx="255" cy="197" rx="22" ry="12"/></g>
+  <path d="M103 199Q160 218 217 199c0 32-24 55-57 55s-57-23-57-55Z" fill="#29213F"/>
+  <path d="M131 208v16q0 6 6 6h13q6 0 6-6v-13M165 211v13q0 6 6 6h13q6 0 6-6v-18" fill="#FFF9EF"/>
+</svg>
