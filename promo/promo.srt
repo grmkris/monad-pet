@@ -1,0 +1,23 @@
+1
+00:00:00,400 --> 00:00:04,400
+Meet your Monad Pet.
+
+2
+00:00:04,600 --> 00:00:06,900
+It’s been 3 blocks since breakfast…
+
+3
+00:00:06,950 --> 00:00:09,150
+…and it’s starving.
+
+4
+00:00:09,300 --> 00:00:11,200
+Feed it $CHOMP.
+
+5
+00:00:11,250 --> 00:00:13,200
+Saved. Delighted. A little chubby.
+
+6
+00:00:14,900 --> 00:00:18,000
+Adopt yours. Keep it fed.

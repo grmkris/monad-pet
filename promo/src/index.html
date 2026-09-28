@@ -1,0 +1,866 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Monad Pet ($CHOMP) promo</title>
+    <script src="assets/vendor/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Fredoka";
+        src: url("assets/fonts/fredoka-500.woff2") format("woff2");
+        font-weight: 500;
+      }
+      @font-face {
+        font-family: "Fredoka";
+        src: url("assets/fonts/fredoka-600.woff2") format("woff2");
+        font-weight: 600;
+      }
+      @font-face {
+        font-family: "Fredoka";
+        src: url("assets/fonts/fredoka-700.woff2") format("woff2");
+        font-weight: 700;
+      }
+      @font-face {
+        font-family: "Press Start 2P";
+        src: url("assets/fonts/press-start-2p.woff2") format("woff2");
+        font-weight: 400;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #efe9ff;
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        font-family: "Fredoka", system-ui, sans-serif;
+        color: #1e1646;
+      }
+      .layer {
+        position: absolute;
+        inset: 0;
+      }
+
+      /* ---------- world (camera) ---------- */
+      #world {
+        transform-origin: 960px 580px;
+      }
+      #sky {
+        background: linear-gradient(170deg, #f4efff 0%, #e8e0ff 48%, #ffe2ee 100%);
+      }
+      .blob {
+        position: absolute;
+        border-radius: 50%;
+      }
+      #blob-a {
+        left: 120px;
+        top: 150px;
+        width: 260px;
+        height: 260px;
+        background: radial-gradient(circle, #c8f3e0 0%, rgba(200, 243, 224, 0) 70%);
+      }
+      #blob-b {
+        left: 1500px;
+        top: 560px;
+        width: 320px;
+        height: 320px;
+        background: radial-gradient(circle, #ffd8c6 0%, rgba(255, 216, 198, 0) 70%);
+      }
+      #blob-c {
+        left: 420px;
+        top: 600px;
+        width: 220px;
+        height: 220px;
+        background: radial-gradient(circle, #ffc9de 0%, rgba(255, 201, 222, 0) 70%);
+      }
+      #blob-d {
+        left: 1180px;
+        top: 90px;
+        width: 240px;
+        height: 240px;
+        background: radial-gradient(circle, #cfe6ff 0%, rgba(207, 230, 255, 0) 70%);
+      }
+      #sun {
+        position: absolute;
+        left: 1440px;
+        top: 90px;
+        width: 240px;
+        height: 240px;
+        border-radius: 50%;
+        background: radial-gradient(circle, #fff0bf 0%, #ffd46e 52%, rgba(255, 212, 110, 0) 71%);
+      }
+      #ground {
+        position: absolute;
+        left: -240px;
+        top: 770px;
+        width: 2400px;
+        height: 760px;
+        border-radius: 50%;
+        background: #ddd2ff;
+      }
+      #dots {
+        background-image: radial-gradient(rgba(131, 110, 249, 0.14) 2px, transparent 2.5px);
+        background-size: 28px 28px;
+      }
+      #dusk {
+        opacity: 0;
+        background: linear-gradient(180deg, #221a4f 0%, #3b2e6e 55%, #5a4a86 100%);
+      }
+      .star {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #fff6d6;
+        opacity: 0;
+      }
+      #pet-shadow {
+        position: absolute;
+        left: 790px;
+        top: 768px;
+        width: 340px;
+        height: 48px;
+        border-radius: 50%;
+        background: radial-gradient(ellipse, rgba(43, 33, 82, 0.3) 0%, rgba(43, 33, 82, 0) 70%);
+      }
+      #pet {
+        position: absolute;
+        left: 740px;
+        top: 350px;
+        width: 440px;
+        height: 440px;
+      }
+      #pet div {
+        width: 100%;
+        height: 100%;
+      }
+      #pet-scale {
+        transform-origin: 50% 92%;
+      }
+      #pet-svg {
+        display: block;
+        width: 440px;
+        height: 440px;
+        overflow: visible;
+      }
+      #coin {
+        position: absolute;
+        left: 880px;
+        top: 590px;
+        width: 160px;
+        height: 160px;
+        opacity: 0;
+      }
+      #coin svg {
+        display: block;
+        width: 160px;
+        height: 160px;
+      }
+      #chomp-fx {
+        position: absolute;
+        left: 1200px;
+        top: 190px;
+        width: 560px;
+        height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+      }
+      #chomp-burst {
+        position: absolute;
+        inset: 0;
+        width: 560px;
+        height: 300px;
+      }
+      #chomp-word {
+        position: relative;
+        font-weight: 700;
+        font-size: 140px;
+        letter-spacing: 0.01em;
+        color: #ffe58a;
+        -webkit-text-stroke: 12px #1e1646;
+        paint-order: stroke fill;
+      }
+      #grumble {
+        position: absolute;
+        left: 1170px;
+        top: 520px;
+        padding: 18px 34px;
+        border-radius: 999px;
+        background: #ffffff;
+        font-weight: 600;
+        font-size: 46px;
+        color: #2b2152;
+        box-shadow: 0 8px 0 rgba(30, 22, 70, 0.25);
+        opacity: 0;
+      }
+      .fx {
+        position: absolute;
+        opacity: 0;
+      }
+      .heart {
+        width: 64px;
+        height: 58px;
+      }
+      .spark {
+        width: 56px;
+        height: 56px;
+      }
+      .confetti {
+        position: absolute;
+        left: 950px;
+        top: 660px;
+        width: 22px;
+        height: 12px;
+        border-radius: 4px;
+        opacity: 0;
+      }
+      #vignette {
+        opacity: 0;
+        background: radial-gradient(ellipse at 50% 55%, rgba(20, 12, 50, 0) 38%, rgba(20, 12, 50, 0.75) 100%);
+      }
+      #flash {
+        opacity: 0;
+        background: #ffffff;
+      }
+
+      /* ---------- UI (fixed, not in camera) ---------- */
+      .lcd {
+        background: #2b2152;
+        border-radius: 24px;
+        box-shadow: 0 10px 0 #1e1646;
+        color: #d9d2ff;
+        font-family: "Press Start 2P", monospace;
+      }
+      #hud-panel {
+        position: absolute;
+        left: 80px;
+        top: 64px;
+        display: flex;
+        align-items: center;
+        gap: 22px;
+        padding: 22px 30px;
+      }
+      #hud-label {
+        font-size: 22px;
+        line-height: 1;
+      }
+      #meter {
+        position: relative;
+        width: 380px;
+        height: 36px;
+        border-radius: 10px;
+        background: #1a1338;
+        overflow: hidden;
+      }
+      #meter-fill {
+        display: block;
+        width: 100%;
+        height: 100%;
+        background: #7ee6a8;
+        transform-origin: 0% 50%;
+      }
+      #meter-segments {
+        position: absolute;
+        inset: 0;
+        background: repeating-linear-gradient(90deg, transparent 0 34px, #1a1338 34px 38px);
+      }
+      #hud-heart {
+        display: block;
+        width: 44px;
+        height: 40px;
+      }
+      #blocks-panel {
+        position: absolute;
+        left: 130px;
+        top: 330px;
+        width: 420px;
+        padding: 30px 32px 34px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 22px;
+        opacity: 0;
+      }
+      #blocks-label {
+        font-size: 20px;
+        line-height: 1.6;
+        text-align: center;
+        color: #d9d2ff;
+      }
+      #blocks-digits {
+        position: relative;
+        width: 140px;
+        height: 130px;
+      }
+      .digit {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 120px;
+        line-height: 1;
+        color: #ffe58a;
+        opacity: 0;
+      }
+
+      /* ---------- end card ---------- */
+      #end-inner {
+        background: radial-gradient(circle at 50% 42%, #9583ff 0%, #836ef9 38%, #5b44d8 100%);
+        clip-path: circle(0px at 960px 1180px);
+      }
+      #end-dots {
+        background-image: radial-gradient(rgba(255, 255, 255, 0.1) 2px, transparent 2.5px);
+        background-size: 32px 32px;
+      }
+      #end-stack {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding-bottom: 150px;
+        gap: 18px;
+      }
+      #end-pet {
+        display: block;
+        width: 290px;
+        height: 290px;
+      }
+      #wordmark {
+        display: flex;
+        font-weight: 700;
+        font-size: 190px;
+        line-height: 1;
+        letter-spacing: -0.02em;
+        color: #ffffff;
+        text-shadow: 0 12px 0 #3f2bb0;
+      }
+      #wordmark span {
+        display: inline-block;
+      }
+      #wordmark .gap {
+        width: 0.28em;
+      }
+      #end-row {
+        display: flex;
+        align-items: center;
+        gap: 34px;
+        margin-top: 26px;
+      }
+      #ticker {
+        display: block;
+        padding: 12px 44px 16px;
+        border-radius: 999px;
+        background: #ffe58a;
+        box-shadow: 0 9px 0 #c9a93a;
+        font-weight: 700;
+        font-size: 76px;
+        line-height: 1;
+        color: #2b1b6b;
+      }
+      #network {
+        display: block;
+        font-weight: 600;
+        font-size: 58px;
+        line-height: 1;
+        color: #ffffff;
+      }
+
+      /* ---------- captions ---------- */
+      .cap {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 64px;
+        height: 96px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 20;
+      }
+      .cap span {
+        display: block;
+        padding: 16px 42px 18px;
+        border-radius: 999px;
+        background: rgba(30, 22, 70, 0.9);
+        font-weight: 600;
+        font-size: 54px;
+        line-height: 1.1;
+        color: #ffffff;
+      }
+      .cap b {
+        font-weight: 700;
+        color: #ffe58a;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="18"
+      data-width="1920"
+      data-height="1080"
+    >
+      <!-- ============ WORLD: beats 1-3 (camera-scaled) ============ -->
+      <div id="world" class="layer clip" data-start="0" data-duration="14" data-track-index="0">
+        <div id="sky" class="layer"></div>
+        <div id="blob-a" class="blob"></div>
+        <div id="blob-b" class="blob"></div>
+        <div id="blob-c" class="blob"></div>
+        <div id="blob-d" class="blob"></div>
+        <div id="sun"></div>
+        <div id="dusk" class="layer"></div>
+        <div id="stars" class="layer"></div>
+        <div id="ground" data-layout-allow-overflow></div>
+        <div id="dots" class="layer"></div>
+        <div id="pet-shadow"></div>
+
+        <div id="pet">
+          <div id="pet-pos">
+            <div id="pet-hop">
+              <div id="pet-shake">
+                <div id="pet-scale">
+                  <svg id="pet-svg" viewBox="0 0 400 400" aria-label="Monad Pet mascot">
+                    <defs>
+                      <clipPath id="clip-eye-l"><ellipse cx="148" cy="205" rx="42" ry="48" /></clipPath>
+                      <clipPath id="clip-eye-r"><ellipse cx="252" cy="205" rx="42" ry="48" /></clipPath>
+                    </defs>
+                    <path d="M200 96 C198 70 206 52 222 40" stroke="#6b55e8" stroke-width="10" fill="none" stroke-linecap="round" />
+                    <circle id="antenna-ball" cx="224" cy="36" r="16" fill="#ffb3c7" />
+                    <ellipse cx="140" cy="356" rx="40" ry="20" fill="#6b55e8" />
+                    <ellipse cx="260" cy="356" rx="40" ry="20" fill="#6b55e8" />
+                    <ellipse cx="58" cy="268" rx="22" ry="30" fill="#735df0" transform="rotate(20 58 268)" />
+                    <ellipse cx="342" cy="268" rx="22" ry="30" fill="#735df0" transform="rotate(-20 342 268)" />
+                    <path d="M200 88 C296 88 352 168 352 248 C352 322 290 362 200 362 C110 362 48 322 48 248 C48 168 104 88 200 88 Z" fill="#836ef9" />
+                    <ellipse cx="200" cy="296" rx="100" ry="54" fill="#9d8bff" />
+                    <ellipse cx="136" cy="140" rx="34" ry="18" fill="#ffffff" opacity="0.35" transform="rotate(-28 136 140)" />
+                    <g id="eyes-open">
+                      <ellipse cx="148" cy="205" rx="42" ry="48" fill="#ffffff" />
+                      <ellipse cx="252" cy="205" rx="42" ry="48" fill="#ffffff" />
+                      <g id="pupils">
+                        <circle cx="154" cy="214" r="25" fill="#1e1646" />
+                        <circle cx="258" cy="214" r="25" fill="#1e1646" />
+                        <circle cx="163" cy="202" r="9" fill="#ffffff" />
+                        <circle cx="267" cy="202" r="9" fill="#ffffff" />
+                        <circle cx="146" cy="226" r="4" fill="#ffffff" />
+                        <circle cx="250" cy="226" r="4" fill="#ffffff" />
+                      </g>
+                      <g clip-path="url(#clip-eye-l)">
+                        <rect id="lid-l" x="88" y="128" width="124" height="0" fill="#836ef9" transform="rotate(-14 148 150)" />
+                      </g>
+                      <g clip-path="url(#clip-eye-r)">
+                        <rect id="lid-r" x="188" y="128" width="124" height="0" fill="#836ef9" transform="rotate(14 252 150)" />
+                      </g>
+                    </g>
+                    <g id="eyes-happy" opacity="0">
+                      <path d="M112 216 Q148 168 184 216" stroke="#1e1646" stroke-width="13" fill="none" stroke-linecap="round" />
+                      <path d="M216 216 Q252 168 288 216" stroke="#1e1646" stroke-width="13" fill="none" stroke-linecap="round" />
+                    </g>
+                    <g id="cheeks">
+                      <ellipse cx="104" cy="266" rx="24" ry="14" fill="#ffb3c7" />
+                      <ellipse cx="296" cy="266" rx="24" ry="14" fill="#ffb3c7" />
+                    </g>
+                    <g id="m-smile">
+                      <path d="M170 266 Q200 304 230 266 Z" fill="#2a1650" stroke="#2a1650" stroke-width="6" stroke-linejoin="round" />
+                      <ellipse cx="200" cy="281" rx="11" ry="5" fill="#ff7fa8" />
+                    </g>
+                    <g id="m-frown" opacity="0">
+                      <path d="M168 292 Q184 270 200 284 Q216 298 232 276" stroke="#2a1650" stroke-width="9" fill="none" stroke-linecap="round" />
+                    </g>
+                    <g id="m-open" opacity="0">
+                      <ellipse cx="200" cy="288" rx="44" ry="42" fill="#2a1650" />
+                      <ellipse cx="200" cy="310" rx="24" ry="11" fill="#ff7fa8" />
+                    </g>
+                    <g id="m-grin" opacity="0">
+                      <path d="M154 262 Q200 332 246 262 Z" fill="#2a1650" stroke="#2a1650" stroke-width="6" stroke-linejoin="round" />
+                      <ellipse cx="200" cy="292" rx="18" ry="8" fill="#ff7fa8" />
+                    </g>
+                    <path id="sweat" d="M326 140 C326 140 310 166 310 178 C310 188 318 194 326 194 C334 194 342 188 342 178 C342 166 326 140 326 140 Z" fill="#9ed8ff" opacity="0" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="grumble">grrrowl…</div>
+
+        <div id="coin">
+          <svg viewBox="0 0 160 160" aria-label="$CHOMP coin">
+            <defs>
+              <mask id="coin-bite">
+                <rect width="160" height="160" fill="#ffffff" />
+                <circle cx="146" cy="22" r="20" fill="#000000" />
+                <circle cx="156" cy="50" r="16" fill="#000000" />
+              </mask>
+            </defs>
+            <g mask="url(#coin-bite)">
+              <circle cx="80" cy="80" r="76" fill="#e8a92e" />
+              <circle cx="80" cy="76" r="72" fill="#ffd66e" />
+              <circle cx="80" cy="76" r="56" fill="none" stroke="#e8b93e" stroke-width="6" />
+              <text x="80" y="104" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="84" fill="#836ef9">$</text>
+            </g>
+          </svg>
+        </div>
+
+        <div id="fx" class="layer"></div>
+
+        <div id="chomp-fx">
+          <svg id="chomp-burst" viewBox="0 0 560 300" aria-hidden="true">
+            <polygon
+              points="280,6 318,86 402,34 384,118 548,112 422,168 520,250 392,224 360,296 300,232 236,296 214,220 72,262 150,176 12,132 170,112 142,30 236,84"
+              fill="#ff7fa8"
+              stroke="#1e1646"
+              stroke-width="8"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <div id="chomp-word">CHOMP!</div>
+        </div>
+
+        <div id="vignette" class="layer"></div>
+        <div id="flash" class="layer"></div>
+      </div>
+
+      <!-- ============ UI: tummy meter + blocks counter ============ -->
+      <div id="hud" class="layer clip" data-start="0" data-duration="14" data-track-index="1">
+        <div id="hud-panel" class="lcd">
+          <svg id="hud-heart" viewBox="0 0 44 40" aria-hidden="true">
+            <path d="M22 38 C10 29 2 21 2 12 C2 6 7 2 12.5 2 C16.5 2 20 4.5 22 8 C24 4.5 27.5 2 31.5 2 C37 2 42 6 42 12 C42 21 34 29 22 38 Z" fill="#ff7fa8" />
+          </svg>
+          <div id="hud-label">TUMMY</div>
+          <div id="meter">
+            <span id="meter-fill"></span>
+            <div id="meter-segments"></div>
+          </div>
+        </div>
+        <div id="blocks-panel" class="lcd">
+          <div id="blocks-label">BLOCKS SINCE BREAKFAST</div>
+          <div id="blocks-digits">
+            <div id="d0" class="digit">0</div>
+            <div id="d1" class="digit">1</div>
+            <div id="d2" class="digit">2</div>
+            <div id="d3" class="digit">3</div>
+            <div id="d0b" class="digit">0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ END CARD: beat 4 ============ -->
+      <div id="endcard" class="layer clip" data-start="12.95" data-duration="5.05" data-track-index="2">
+        <div id="end-inner" class="layer">
+          <div id="end-dots" class="layer"></div>
+          <div id="end-stack">
+            <svg id="end-pet" viewBox="0 0 400 400" aria-label="Monad Pet mascot, happy">
+              <path d="M200 96 C198 70 206 52 222 40" stroke="#4a34c9" stroke-width="10" fill="none" stroke-linecap="round" />
+              <circle cx="224" cy="36" r="16" fill="#ffb3c7" />
+              <ellipse cx="140" cy="356" rx="40" ry="20" fill="#4a34c9" />
+              <ellipse cx="260" cy="356" rx="40" ry="20" fill="#4a34c9" />
+              <ellipse cx="58" cy="268" rx="22" ry="30" fill="#e6e0ff" transform="rotate(20 58 268)" />
+              <ellipse cx="342" cy="268" rx="22" ry="30" fill="#e6e0ff" transform="rotate(-20 342 268)" />
+              <path d="M200 88 C296 88 352 168 352 248 C352 322 290 362 200 362 C110 362 48 322 48 248 C48 168 104 88 200 88 Z" fill="#f4f1ff" />
+              <ellipse cx="200" cy="296" rx="100" ry="54" fill="#e2dbff" />
+              <path d="M112 216 Q148 168 184 216" stroke="#1e1646" stroke-width="13" fill="none" stroke-linecap="round" />
+              <path d="M216 216 Q252 168 288 216" stroke="#1e1646" stroke-width="13" fill="none" stroke-linecap="round" />
+              <ellipse cx="104" cy="266" rx="24" ry="14" fill="#ffb3c7" />
+              <ellipse cx="296" cy="266" rx="24" ry="14" fill="#ffb3c7" />
+              <path d="M154 262 Q200 332 246 262 Z" fill="#2a1650" stroke="#2a1650" stroke-width="6" stroke-linejoin="round" />
+              <ellipse cx="200" cy="292" rx="18" ry="8" fill="#ff7fa8" />
+            </svg>
+            <div id="wordmark">
+              <span>M</span><span>o</span><span>n</span><span>a</span><span>d</span><span class="gap"></span><span>P</span><span>e</span><span>t</span>
+            </div>
+            <div id="end-row">
+              <div id="ticker">$CHOMP</div>
+              <div id="network">on Monad testnet</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ CAPTIONS (one track) ============ -->
+      <div id="cap-1" class="cap clip" data-start="0.4" data-duration="4.0" data-track-index="3"><span>Meet your Monad Pet.</span></div>
+      <div id="cap-2" class="cap clip" data-start="4.6" data-duration="2.3" data-track-index="3"><span>It’s been 3 blocks since breakfast…</span></div>
+      <div id="cap-3" class="cap clip" data-start="6.95" data-duration="2.2" data-track-index="3"><span>…and it’s starving.</span></div>
+      <div id="cap-4" class="cap clip" data-start="9.3" data-duration="1.9" data-track-index="3"><span>Feed it <b>$CHOMP</b>.</span></div>
+      <div id="cap-5" class="cap clip" data-start="11.25" data-duration="1.95" data-track-index="3"><span>Saved. Delighted. A little chubby.</span></div>
+      <div id="cap-6" class="cap clip" data-start="14.9" data-duration="3.1" data-track-index="3"><span>Adopt yours. Keep it fed.</span></div>
+
+      <audio id="bgm" src="assets/audio/bgm.m4a" data-start="0" data-duration="18" data-track-index="4" data-volume="0.9"></audio>
+    </div>
+
+    <script>
+      // ---------- deterministic decor ----------
+      function mulberry32(a) {
+        return function () {
+          a |= 0;
+          a = (a + 0x6d2b79f5) | 0;
+          let t = Math.imul(a ^ (a >>> 15), 1 | a);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+      const rand = mulberry32(8183);
+
+      const starsEl = document.getElementById("stars");
+      const stars = [];
+      for (let i = 0; i < 22; i++) {
+        const s = document.createElement("div");
+        s.className = "star";
+        s.style.left = Math.round(60 + rand() * 1800) + "px";
+        s.style.top = Math.round(40 + rand() * 520) + "px";
+        const size = 5 + Math.round(rand() * 6);
+        s.style.width = size + "px";
+        s.style.height = size + "px";
+        starsEl.appendChild(s);
+        stars.push(s);
+      }
+
+      const HEART =
+        '<svg viewBox="0 0 44 40" width="100%" height="100%"><path d="M22 38 C10 29 2 21 2 12 C2 6 7 2 12.5 2 C16.5 2 20 4.5 22 8 C24 4.5 27.5 2 31.5 2 C37 2 42 6 42 12 C42 21 34 29 22 38 Z" fill="#ff7fa8" stroke="#1e1646" stroke-width="2.5"/></svg>';
+      const SPARK =
+        '<svg viewBox="0 0 40 40" width="100%" height="100%"><path d="M20 0 C22 13 27 18 40 20 C27 22 22 27 20 40 C18 27 13 22 0 20 C13 18 18 13 20 0 Z" fill="#ffe58a" stroke="#1e1646" stroke-width="1.5"/></svg>';
+      const fxEl = document.getElementById("fx");
+      function addFx(cls, svg, x, y) {
+        const el = document.createElement("div");
+        el.className = "fx " + cls;
+        el.style.left = x + "px";
+        el.style.top = y + "px";
+        el.innerHTML = svg;
+        fxEl.appendChild(el);
+        return el;
+      }
+      // intro sparkles and two early hearts
+      const introSparks = [
+        [700, 380],
+        [1180, 400],
+        [660, 620],
+        [1230, 640],
+        [940, 280],
+      ].map(([x, y]) => addFx("spark", SPARK, x, y));
+      const introHearts = [
+        [1120, 390],
+        [760, 420],
+      ].map(([x, y]) => addFx("heart", HEART, x, y));
+      // feeding: hearts and sparkles
+      const feedHearts = [
+        [720, 470],
+        [1150, 450],
+        [640, 610],
+        [1230, 600],
+        [880, 330],
+        [1040, 320],
+      ].map(([x, y]) => addFx("heart", HEART, x, y));
+      const feedSparks = [
+        [600, 420],
+        [1290, 420],
+        [700, 280],
+        [1200, 290],
+        [560, 690],
+        [1320, 700],
+      ].map(([x, y]) => addFx("spark", SPARK, x, y));
+      const CONFETTI_COLORS = ["#836ef9", "#ffb3c7", "#7ee6a8", "#ffe58a", "#9ed8ff", "#ff7fa8"];
+      const confetti = [];
+      for (let i = 0; i < 30; i++) {
+        const c = document.createElement("div");
+        c.className = "confetti";
+        c.style.background = CONFETTI_COLORS[i % CONFETTI_COLORS.length];
+        fxEl.appendChild(c);
+        const ang = -Math.PI * (0.08 + rand() * 0.84);
+        const dist = 260 + rand() * 420;
+        confetti.push({ el: c, dx: Math.cos(ang) * dist, dy: Math.sin(ang) * dist, rot: -360 + rand() * 720, fall: 220 + rand() * 260 });
+      }
+
+      // ---------- timeline ----------
+      const tl = gsap.timeline({ paused: true });
+      const BEAT = 0.5108;
+
+      // Beat 1 (0 - 4.5): meet the pet
+      tl.fromTo("#pet-scale", { scale: 0 }, { scale: 1, duration: 0.6, ease: "back.out(2.2)" }, 0.15);
+      tl.fromTo("#pet-pos", { y: 160 }, { y: 0, duration: 0.55, ease: "power3.out" }, 0.15);
+      tl.fromTo("#pet-shadow", { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: "power2.out" }, 0.25);
+      tl.to("#pet-scale", { scaleX: 1.12, scaleY: 0.88, duration: 0.12, ease: "power2.out" }, 0.76);
+      tl.to("#pet-scale", { scaleX: 1, scaleY: 1, duration: 0.6, ease: "elastic.out(1, 0.4)" }, 0.88);
+      introSparks.forEach((el, i) => {
+        tl.fromTo(el, { scale: 0, opacity: 0, rotation: -45 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.3, ease: "back.out(3)" }, 0.55 + i * 0.06);
+        tl.to(el, { scale: 0, opacity: 0, duration: 0.35, ease: "power2.in" }, 1.25 + i * 0.06);
+      });
+      tl.fromTo("#hud-panel", { y: -200 }, { y: 0, duration: 0.6, ease: "back.out(1.6)" }, 1.0);
+      tl.fromTo("#meter-fill", { scaleX: 0 }, { scaleX: 1, duration: 0.8, ease: "power2.out" }, 1.3);
+      // blinks
+      [1.7, 3.55].forEach((t) => {
+        tl.to(["#lid-l", "#lid-r"], { attr: { height: 132 }, duration: 0.08, ease: "power1.in" }, t);
+        tl.to(["#lid-l", "#lid-r"], { attr: { height: 0 }, duration: 0.1, ease: "power1.out" }, t + 0.1);
+      });
+      // idle bob on the beat
+      tl.to("#pet-pos", { y: -16, duration: BEAT, ease: "sine.inOut", yoyo: true, repeat: 5 }, 1.45);
+      // a happy hop with hearts
+      tl.to("#pet-hop", { y: -70, duration: 0.25, ease: "power2.out" }, 2.55);
+      tl.to("#pet-hop", { y: 0, duration: 0.3, ease: "bounce.out" }, 2.8);
+      tl.to("#antenna-ball", { y: -10, duration: 0.15, yoyo: true, repeat: 1, ease: "sine.inOut" }, 2.6);
+      introHearts.forEach((el, i) => {
+        tl.fromTo(el, { opacity: 0, scale: 0.4, y: 0 }, { opacity: 1, scale: 1, y: -60, duration: 0.4, ease: "back.out(2)" }, 2.6 + i * 0.12);
+        tl.to(el, { opacity: 0, y: -160, duration: 0.7, ease: "power1.in" }, 3.1 + i * 0.12);
+      });
+      // decor drift across the whole world clip
+      tl.to("#blob-a", { y: 40, x: 20, duration: 3.5, ease: "sine.inOut", yoyo: true, repeat: 3 }, 0);
+      tl.to("#blob-b", { y: -36, duration: 3.1, ease: "sine.inOut", yoyo: true, repeat: 3 }, 0);
+      tl.to("#blob-c", { y: 30, x: -20, duration: 2.9, ease: "sine.inOut", yoyo: true, repeat: 3 }, 0);
+      tl.to("#blob-d", { y: 28, duration: 3.3, ease: "sine.inOut", yoyo: true, repeat: 3 }, 0);
+
+      // Beat 2 (4.5 - 9.2): time passes, it gets hungry
+      tl.to("#dusk", { opacity: 0.86, duration: 2.2, ease: "power1.inOut" }, 4.5);
+      tl.to("#sun", { y: 560, opacity: 0.2, duration: 2.6, ease: "power1.in" }, 4.5);
+      tl.to("#ground", { backgroundColor: "#6d5f9c", duration: 2.2, ease: "power1.inOut" }, 4.5);
+      stars.forEach((s, i) => {
+        tl.to(s, { opacity: 0.9, duration: 0.4, ease: "power1.out" }, 5.3 + (i % 7) * 0.18);
+      });
+      tl.fromTo("#blocks-panel", { opacity: 0, x: -120 }, { opacity: 1, x: 0, duration: 0.45, ease: "back.out(1.6)" }, 4.55);
+      tl.set("#d0", { opacity: 1 }, 4.55);
+      [
+        ["#d0", "#d1", 5.0],
+        ["#d1", "#d2", 6.02],
+        ["#d2", "#d3", 7.04],
+      ].forEach(([from, to, t], i) => {
+        tl.set(from, { opacity: 0 }, t);
+        tl.set(to, { opacity: 1 }, t);
+        tl.fromTo(to, { scale: 1.7 }, { scale: 1, duration: 0.35, ease: "back.out(2.5)" }, t);
+        tl.fromTo("#blocks-panel", { x: -14 }, { x: 0, duration: 0.4, ease: "elastic.out(1.2, 0.3)" }, t);
+        tl.to("#d" + (i + 1), { color: ["#ffe58a", "#ffb36e", "#ff7a8a"][i], duration: 0.01 }, t);
+      });
+      // the tummy drains, step by step
+      [
+        [5.0, 0.7, "#c9e67e"],
+        [6.02, 0.42, "#ffd66e"],
+        [7.04, 0.12, "#ff7a8a"],
+      ].forEach(([t, v, c]) => {
+        tl.to("#meter-fill", { scaleX: v, backgroundColor: c, duration: 0.45, ease: "power2.out" }, t);
+      });
+      tl.to("#meter-fill", { opacity: 0.35, duration: 0.2, yoyo: true, repeat: 7, ease: "steps(1)" }, 7.5);
+      tl.to("#hud-heart", { scale: 0.8, duration: 0.2, yoyo: true, repeat: 7, ease: "sine.inOut" }, 7.5);
+      // the pet droops
+      tl.to("#pet-pos", { y: 0, duration: 0.2 }, 4.52);
+      tl.to(["#lid-l", "#lid-r"], { attr: { height: 58 }, duration: 0.5, ease: "power2.inOut" }, 5.05);
+      tl.to("#pupils", { y: 10, duration: 0.5, ease: "power2.inOut" }, 5.05);
+      tl.to("#m-smile", { opacity: 0, duration: 0.15 }, 5.3);
+      tl.to("#m-frown", { opacity: 1, duration: 0.15 }, 5.3);
+      tl.to("#cheeks", { opacity: 0.25, duration: 0.8 }, 5.3);
+      tl.to("#pet-scale", { scaleX: 1.07, scaleY: 0.86, duration: 1.6, ease: "power2.inOut" }, 5.4);
+      tl.fromTo("#pet-svg", { filter: "saturate(1) brightness(1)" }, { filter: "saturate(0.35) brightness(0.92)", duration: 2.2, ease: "power1.inOut" }, 5.0);
+      tl.fromTo("#sweat", { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: 0.3 }, 6.2);
+      tl.to("#sweat", { y: 60, opacity: 0, duration: 1.0, ease: "power1.in" }, 6.6);
+      // stomach rumble
+      tl.fromTo("#pet-shake", { x: -9 }, { x: 9, duration: 0.05, yoyo: true, repeat: 13, ease: "none" }, 7.4);
+      tl.to("#pet-shake", { x: 0, duration: 0.05 }, 8.1);
+      tl.fromTo("#grumble", { opacity: 0, scale: 0.4, rotation: -12 }, { opacity: 1, scale: 1, rotation: -4, duration: 0.35, ease: "back.out(2.5)" }, 7.4);
+      tl.to("#grumble", { opacity: 0, y: -30, duration: 0.3 }, 8.7);
+      // dramatic push-in
+      tl.to("#world", { scale: 1.2, duration: 1.7, ease: "power1.in" }, 7.25);
+      tl.to("#vignette", { opacity: 1, duration: 1.5, ease: "power1.in" }, 7.3);
+
+      // Beat 3 (9.0 - 13.3): feed it $CHOMP
+      tl.to("#world", { scale: 1, duration: 0.4, ease: "power3.out" }, 8.95);
+      tl.to("#vignette", { opacity: 0.4, duration: 0.4 }, 8.95);
+      tl.set("#coin", { opacity: 0, y: -820, rotation: -30 }, 0);
+      tl.to("#coin", { opacity: 1, duration: 0.01 }, 9.0);
+      tl.to("#coin", { y: 0, rotation: 20, duration: 0.72, ease: "power2.in" }, 9.0);
+      tl.to("#coin", { scaleX: 0.25, duration: 0.12, yoyo: true, repeat: 5, ease: "sine.inOut" }, 9.0);
+      tl.to("#pupils", { y: -14, duration: 0.25, ease: "power2.out" }, 9.05);
+      tl.to(["#lid-l", "#lid-r"], { attr: { height: 0 }, duration: 0.2, ease: "power2.out" }, 9.05);
+      tl.to("#m-frown", { opacity: 0, duration: 0.08 }, 9.3);
+      tl.fromTo("#m-open", { opacity: 0, scale: 0.3, transformOrigin: "50% 30%" }, { opacity: 1, scale: 1, duration: 0.18, ease: "back.out(3)" }, 9.3);
+      tl.to("#pet-scale", { scaleX: 0.96, scaleY: 1.08, duration: 0.3, ease: "power2.out" }, 9.3);
+      // the chomp
+      tl.to("#coin", { scale: 0.2, opacity: 0, duration: 0.08, ease: "power2.in" }, 9.72);
+      tl.to("#m-open", { opacity: 0, duration: 0.05 }, 9.78);
+      tl.to("#m-smile", { opacity: 1, duration: 0.05 }, 9.78);
+      tl.to("#pet-scale", { scaleX: 1.22, scaleY: 0.8, duration: 0.1, ease: "power2.out" }, 9.78);
+      tl.to("#pet-scale", { scaleX: 1.16, scaleY: 1.08, duration: 0.8, ease: "elastic.out(1, 0.35)" }, 9.88);
+      tl.set("#flash", { opacity: 0.85 }, 9.78);
+      tl.to("#flash", { opacity: 0, duration: 0.35, ease: "power2.out" }, 9.8);
+      tl.fromTo("#chomp-fx", { opacity: 0, scale: 0.2, rotation: -20 }, { opacity: 1, scale: 1, rotation: 6, duration: 0.3, ease: "back.out(2.8)" }, 9.8);
+      tl.to("#chomp-fx", { scale: 1.08, duration: 0.18, yoyo: true, repeat: 3, ease: "sine.inOut" }, 10.12);
+      tl.to("#chomp-fx", { opacity: 0, scale: 0.6, y: -40, duration: 0.3, ease: "power2.in" }, 10.9);
+      // the world lights back up
+      tl.to("#vignette", { opacity: 0, duration: 0.4 }, 9.8);
+      tl.to("#dusk", { opacity: 0, duration: 0.6, ease: "power2.out" }, 9.8);
+      tl.to("#ground", { backgroundColor: "#ddd2ff", duration: 0.6 }, 9.8);
+      tl.to("#sun", { y: 0, opacity: 1, duration: 0.9, ease: "back.out(1.4)" }, 9.85);
+      stars.forEach((s) => tl.to(s, { opacity: 0, duration: 0.3 }, 9.8));
+      tl.to("#pet-svg", { filter: "saturate(1) brightness(1)", duration: 0.4, ease: "power2.out" }, 9.8);
+      tl.to("#cheeks", { opacity: 1, duration: 0.3 }, 9.9);
+      // meter refills, counter resets
+      tl.to("#meter-fill", { opacity: 1, duration: 0.01 }, 9.8);
+      tl.to("#meter-fill", { scaleX: 1, backgroundColor: "#7ee6a8", duration: 0.9, ease: "elastic.out(1, 0.5)" }, 9.85);
+      tl.set("#d3", { opacity: 0 }, 9.85);
+      tl.set("#d0b", { opacity: 1 }, 9.85);
+      tl.fromTo("#d0b", { scale: 1.8 }, { scale: 1, duration: 0.4, ease: "back.out(2.5)" }, 9.85);
+      tl.to("#blocks-panel", { opacity: 0, x: -80, duration: 0.4, ease: "power2.in" }, 11.2);
+      // delighted
+      tl.to("#eyes-open", { opacity: 0, duration: 0.08 }, 10.05);
+      tl.to("#eyes-happy", { opacity: 1, duration: 0.08 }, 10.05);
+      tl.to("#m-smile", { opacity: 0, duration: 0.08 }, 10.05);
+      tl.to("#m-grin", { opacity: 1, duration: 0.08 }, 10.05);
+      confetti.forEach((c, i) => {
+        const t0 = 9.8 + (i % 6) * 0.015;
+        tl.fromTo(c.el, { x: 0, y: 0, rotation: 0, opacity: 1 }, { x: c.dx, y: c.dy, rotation: c.rot, duration: 0.7, ease: "power3.out" }, t0);
+        tl.to(c.el, { y: c.dy + c.fall, opacity: 0, duration: 1.1, ease: "power1.in" }, t0 + 0.7);
+      });
+      feedSparks.forEach((el, i) => {
+        tl.fromTo(el, { scale: 0, opacity: 0, rotation: -60 }, { scale: 1.2, opacity: 1, rotation: 0, duration: 0.3, ease: "back.out(3)" }, 9.85 + i * 0.05);
+        tl.to(el, { scale: 0, opacity: 0, duration: 0.4, ease: "power2.in" }, 10.6 + i * 0.05);
+      });
+      feedHearts.forEach((el, i) => {
+        const t0 = 10.2 + i * 0.22;
+        tl.fromTo(el, { opacity: 0, scale: 0.3, y: 0, x: 0 }, { opacity: 1, scale: 1, y: -80, x: i % 2 ? 16 : -16, duration: 0.45, ease: "back.out(2)" }, t0);
+        tl.to(el, { opacity: 0, y: -240, x: i % 2 ? -10 : 10, duration: 1.0, ease: "power1.in" }, t0 + 0.55);
+      });
+      // happy hops on the beat
+      [10.74, 11.76].forEach((t) => {
+        tl.to("#pet-hop", { y: -80, duration: 0.24, ease: "power2.out" }, t);
+        tl.to("#pet-hop", { y: 0, duration: 0.26, ease: "power2.in" }, t + 0.24);
+        tl.to("#pet-shadow", { scale: 0.75, opacity: 0.6, duration: 0.24, yoyo: true, repeat: 1, ease: "power2.out" }, t);
+      });
+
+      // the pet leaps out of frame...
+      tl.to("#pet-scale", { scaleX: 1.34, scaleY: 0.8, duration: 0.16, ease: "power2.out" }, 12.6);
+      tl.to("#pet-scale", { scaleX: 0.92, scaleY: 1.26, duration: 0.16, ease: "power2.in" }, 12.78);
+      tl.to("#pet-hop", { y: -1100, duration: 0.45, ease: "power2.in" }, 12.8);
+      tl.to("#pet-shadow", { scale: 0, opacity: 0, duration: 0.35, ease: "power2.in" }, 12.8);
+
+      // Beat 4 (13.0 - 18): end card; the pet lands on it
+      tl.to("#hud-panel", { y: -200, duration: 0.35, ease: "power2.in" }, 12.95);
+      tl.fromTo("#end-inner", { clipPath: "circle(0px at 960px 1180px)" }, { clipPath: "circle(1760px at 960px 1180px)", duration: 0.6, ease: "power2.inOut" }, 13.0);
+      tl.fromTo("#end-pet", { y: -760 }, { y: 0, duration: 0.7, ease: "bounce.out" }, 13.25);
+      tl.fromTo("#wordmark span", { y: 90, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "back.out(2)", stagger: 0.045 }, 13.8);
+      tl.fromTo("#ticker", { scale: 0, rotation: -8 }, { scale: 1, rotation: -3, duration: 0.5, ease: "back.out(2.6)" }, 14.35);
+      tl.fromTo("#network", { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.45, ease: "power3.out" }, 14.6);
+      tl.to("#end-pet", { y: -14, duration: BEAT, ease: "sine.inOut", yoyo: true, repeat: 5 }, 14.3);
+      tl.to("#ticker", { scale: 1.06, duration: BEAT, ease: "sine.inOut", yoyo: true, repeat: 3 }, 15.4);
+
+      // captions: soft rise in
+      ["#cap-1", "#cap-2", "#cap-3", "#cap-4", "#cap-5", "#cap-6"].forEach((id) => {
+        const start = parseFloat(document.querySelector(id).dataset.start);
+        tl.fromTo(id + " span", { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: "power3.out" }, start);
+      });
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
