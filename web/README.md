@@ -10,8 +10,10 @@ framework, no build step.
 
 Client-side only. The belly meter drains from 100% to empty in 90 seconds, and the pet's mood follows it:
 **happy** (above 60%), **peckish** (above 25%), **starving**. "Feed 1 $CHOMP" refills it to 100%. The state is kept
-in `localStorage`, so the pet keeps getting hungry while you are away. "Blocks since breakfast" counts 400 ms
-blocks since the last meal.
+in `localStorage`, so the pet keeps getting hungry while you are away. "Since breakfast" under the belly meter counts
+real Monad testnet blocks since the last meal: the page reads `eth_blockNumber` from `https://testnet-rpc.monad.xyz`
+once a second, and the block of the last feed is stored with the state (`fedBlock`). Until the chain answers the
+counter shows an estimate (`~`) at 400 ms per block.
 
 ## Waitlist
 

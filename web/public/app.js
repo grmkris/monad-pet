@@ -2,7 +2,9 @@
 (() => {
   const KEY = "monad-pet:v1";
   const DRAIN_PER_SEC = 100 / 90; // a full belly empties in 90 s
-  const BLOCK_MS = 400;           // demo block time for "blocks since breakfast"
+  const BLOCK_MS = 400;           // demo block time for "blocks since breakfast" while the chain is unreachable
+  const RPC = "https://testnet-rpc.monad.xyz"; // Monad testnet (chain id 10143), read-only: eth_blockNumber
+  const HEAD_POLL_MS = 1000;      // how often to ask the chain for its latest block
   const SEGMENTS = 20;
   const INK = "#200052";
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -62,18 +64,50 @@
   function load() {
     try {
       const s = JSON.parse(localStorage.getItem(KEY));
-      if (s && [s.full, s.at, s.fedAt, s.fed].every(Number.isFinite)) return s;
+      if (s && [s.full, s.at, s.fedAt, s.fed].every(Number.isFinite)) {
+        // fedBlock: the Monad block of the last meal; null until the chain has been reached (older saves have none)
+        s.fedBlock = Number.isFinite(s.fedBlock) ? s.fedBlock : null;
+        return s;
+      }
     } catch {}
     return null;
   }
   function save() {
     try { localStorage.setItem(KEY, JSON.stringify(state)); } catch {}
   }
-  let state = load() || { full: 100, at: now(), fedAt: now(), fed: 0 };
+  let state = load() || { full: 100, at: now(), fedAt: now(), fed: 0, fedBlock: null };
   save();
 
   const fullness = (t) => Math.max(0, Math.min(100, state.full - ((t - state.at) / 1000) * DRAIN_PER_SEC));
   const moodOf = (f) => (f > 60 ? "happy" : f > 25 ? "peckish" : "starving");
+
+  // ---------- Monad blocks ----------
+  // `head` is the latest block number seen on Monad testnet (null until the first answer). "Blocks since
+  // breakfast" is head - fedBlock; while the chain is unreachable it falls back to counting BLOCK_MS blocks.
+  let head = null;
+  async function pollHead() {
+    if (document.hidden) return;
+    try {
+      const res = await fetch(RPC, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "eth_blockNumber", params: [] }),
+      });
+      const n = parseInt((await res.json()).result, 16);
+      if (!Number.isFinite(n)) return;
+      head = Math.max(head ?? 0, n); // never tick backwards if one RPC node lags another
+      if (state.fedBlock === null) {
+        // Fed before the chain answered (or an older save): place the meal at the block it most likely happened in.
+        state.fedBlock = Math.max(0, head - Math.floor((now() - state.fedAt) / BLOCK_MS));
+        save();
+      }
+      render();
+    } catch {}
+  }
+  const blocksSince = (t) =>
+    head !== null && state.fedBlock !== null
+      ? Math.max(0, head - state.fedBlock)
+      : Math.max(0, Math.floor((t - state.fedAt) / BLOCK_MS));
 
   function line(mood, blocks, f) {
     if (mood === "happy") return blocks < 12 ? "Nom. Full belly. Life is good." : `${blocks} blocks since breakfast. Still vibing.`;
@@ -89,6 +123,7 @@
   const pctEl = $("[data-pct]");
   const moodEl = $("[data-mood-label]");
   const blocksEl = $("[data-blocks]");
+  const sinceEl = $("[data-since]");
   const fedEl = $("[data-fed]");
   const speechEls = document.querySelectorAll("[data-speech]");
   const announce = $("[data-announce]");
@@ -102,7 +137,7 @@
     return s;
   });
 
-  let prev = { mood: null, lit: -1, pct: -1, blocks: -1, fed: -1, text: "" };
+  let prev = { mood: null, lit: -1, pct: -1, blocks: -1, live: null, fed: -1, text: "" };
   let override = null; // a short line after feeding: { text, until }
 
   function render() {
@@ -111,7 +146,8 @@
     const mood = moodOf(f);
     const lit = Math.ceil(f / (100 / SEGMENTS));
     const pct = Math.round(f);
-    const blocks = Math.max(0, Math.floor((t - state.fedAt) / BLOCK_MS));
+    const blocks = blocksSince(t);
+    const live = head !== null && state.fedBlock !== null; // counted on Monad, not estimated
 
     if (mood !== prev.mood) {
       device.dataset.mood = mood;
@@ -133,13 +169,19 @@
       meter.setAttribute("aria-valuenow", String(pct));
       meter.setAttribute("aria-valuetext", `${pct}% full, ${mood}`);
     }
-    if (blocks !== prev.blocks) blocksEl.textContent = blocks.toLocaleString();
+    if (blocks !== prev.blocks || live !== prev.live) {
+      blocksEl.textContent = blocks.toLocaleString();
+      sinceEl.textContent = `${live ? "" : "~"}${blocks.toLocaleString()}`; // "~" while it is only an estimate
+      sinceEl.title = live
+        ? `Monad block ${head.toLocaleString()}, fed at block ${state.fedBlock.toLocaleString()}`
+        : "Estimated (Monad not reachable yet)";
+    }
     if (state.fed !== prev.fed) fedEl.textContent = state.fed.toLocaleString();
 
     const text = override && override.until > t ? override.text : line(mood, blocks, f);
     if (text !== prev.text) for (const el of speechEls) el.textContent = text;
 
-    prev = { mood, lit, pct, blocks, fed: state.fed, text };
+    prev = { mood, lit, pct, blocks, live, fed: state.fed, text };
   }
 
   function floatText(text) {
@@ -162,7 +204,8 @@
   feedBtn.addEventListener("click", () => {
     const t = now();
     const wasFull = fullness(t) >= 95;
-    state = { full: 100, at: t, fedAt: t, fed: state.fed + 1 };
+    // The meal lands in the latest block we know of; null until the chain answers, then pollHead fills it in.
+    state = { full: 100, at: t, fedAt: t, fed: state.fed + 1, fedBlock: head };
     save();
 
     const coin = document.createElement("span");
@@ -182,6 +225,9 @@
 
   render();
   setInterval(render, 250);
+  pollHead();
+  setInterval(pollHead, HEAD_POLL_MS);
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) pollHead(); });
 
   // ---------- Waitlist (client-side only) ----------
   const form = $("[data-waitlist-form]");

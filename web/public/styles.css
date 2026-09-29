@@ -249,6 +249,9 @@ h1 {
 .device[data-mood="peckish"] { --seg: #d69c12; }
 .device[data-mood="starving"] { --seg: #e0484f; }
 .lcd-num { min-width: 3.4em; text-align: right; font-size: 0.95rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.since-row { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-top: 6px; }
+.lcd-since { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; opacity: 0.75; white-space: nowrap; }
+.lcd-since [data-since] { font-size: 0.95rem; font-variant-numeric: tabular-nums; }
 
 .feed-btn {
   position: relative;
