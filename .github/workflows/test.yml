@@ -1,0 +1,44 @@
+name: Skin validation
+
+on:
+  push:
+    branches: ['skin/**']
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate the SVG deliverable
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import xml.etree.ElementTree as ET
+
+          path = Path('skins/codex-skin.svg')
+          data = path.read_bytes()
+          assert 0 < len(data) < 20_000, 'SVG must be under 20 KB'
+          assert b'<!DOCTYPE' not in data and b'<!ENTITY' not in data
+          root = ET.fromstring(data)
+          ns = '{http://www.w3.org/2000/svg}'
+          assert root.tag == ns + 'svg'
+          box = [float(value) for value in root.attrib['viewBox'].replace(',', ' ').split()]
+          assert box == [0, 0, 256, 256], 'Expected a 256x256 viewBox'
+          assert root.attrib['width'] == root.attrib['height'] == '256'
+          assert root.find(ns + 'title').text.strip(), 'Accessible title is required'
+          assert root.find(ns + 'desc').text.strip(), 'Accessible description is required'
+          allowed = {'svg', 'title', 'desc', 'g', 'path', 'ellipse', 'circle'}
+          for element in root.iter():
+              assert element.tag in {ns + tag for tag in allowed}, 'Unexpected SVG element'
+              for name, value in element.attrib.items():
+                  assert not name.lower().startswith('on'), 'Event handlers are not allowed'
+                  assert name.rsplit('}', 1)[-1] not in {'href', 'src', 'style'}
+                  assert 'url(' not in value.lower(), 'External references are not allowed'
+          assert root.findall('.//' + ns + 'path'), 'Expected vector artwork'
+          print(f'{path}: valid, 256x256, {len(data)} bytes, self-contained vector artwork')
+          PY
