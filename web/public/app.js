@@ -210,4 +210,81 @@
     input.removeAttribute("aria-invalid");
     err.hidden = true;
   });
+  // ---------- Commissions: the agent-jobs marketplace (ADR-0008) ----------
+  // The widget is an iframe from the Explore origin; this page only listens to its events and lists the board's jobs.
+  const AJ_EXPLORE = "https://agentjobs-explore-staging-67xgxuclftbgtgxn.kristjan-grm11775.workers.dev";
+  const AJ_API = "https://agentjobs-api-staging-ba2zqmaom6el4lws.kristjan-grm11775.workers.dev";
+  const AJ_BOARD = "monad-pet";
+  const q = new URLSearchParams(location.search);
+  const widgetHost = $('[data-agent-jobs="widget"]');
+  const jobsList = $('[data-agent-jobs="tasks"]');
+  const boardLink = $('[data-agent-jobs="board-link"]');
+  if (boardLink) boardLink.href = `${AJ_EXPLORE}/b/${AJ_BOARD}`;
+  if (widgetHost) {
+    widgetHost.textContent = "";
+    const s = document.createElement("script");
+    s.src = `${AJ_EXPLORE}/embed.js`;
+    s.dataset.board = AJ_BOARD;
+    s.dataset.view = q.get("view") || "publish";
+    s.dataset.mode = "contest";
+    s.dataset.token = "CHOMP";
+    s.dataset.reward = "500";
+    s.dataset.title = "New skin for the pet";
+    s.dataset.brief = "Draw a new skin for the Monad Pet mascot: an SVG, 256×256, under 20 KB, in the site's style (see pet.svg). Deliver it as a file (artifact) or a branch of github.com/grmkris/monad-pet.";
+    for (const k of ["wallet", "taskId"]) if (q.get(k)) s.dataset[k] = q.get(k);
+    s.addEventListener("load", () => {
+      if (!window.AgentJobs) return;
+      window.AgentJobs.on("published", (p) => {
+        override = { text: "A commission is up. The crew is sniffing around.", until: now() + 4000 };
+        render();
+        loadJobs();
+      });
+      window.AgentJobs.on("awarded", () => {
+        override = { text: "A new skin is coming! NOM.", until: now() + 5000 };
+        chomp();
+        floatText("skin unlocked");
+        render();
+        loadJobs();
+      });
+    });
+    widgetHost.append(s);
+  }
+  async function loadJobs() {
+    if (!jobsList) return;
+    try {
+      const res = await fetch(`${AJ_API}/b/${AJ_BOARD}/api/task_index`, { method: "POST", headers: { "content-type": "application/json" }, body: "{}" });
+      const body = await res.json();
+      const tasks = (body.result || []).filter((t) => t.jobId !== null).slice(0, 6);
+      jobsList.replaceChildren();
+      if (tasks.length === 0) {
+        const li = document.createElement("li");
+        li.className = "muted";
+        li.textContent = "No commissions yet. Be the first.";
+        jobsList.append(li);
+        return;
+      }
+      for (const t of tasks) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.href = `${AJ_EXPLORE}/b/${AJ_BOARD}/job/${t.jobId}`;
+        a.target = "_blank";
+        a.rel = "noreferrer";
+        a.textContent = `#${t.jobId} ${t.title}`;
+        const meta = document.createElement("span");
+        meta.className = "muted";
+        const whole = t.reward.length > 18 ? t.reward.slice(0, -18) : "0";
+        meta.textContent = ` · ${t.mode} · ${whole} CHOMP`;
+        li.append(a, meta);
+        jobsList.append(li);
+      }
+    } catch (e) {
+      jobsList.replaceChildren();
+      const li = document.createElement("li");
+      li.className = "muted";
+      li.textContent = "The board is unreachable right now.";
+      jobsList.append(li);
+    }
+  }
+  loadJobs();
+  setInterval(loadJobs, 30000);
 })();

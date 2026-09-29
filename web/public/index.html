@@ -27,6 +27,7 @@
       <a href="#how">How it works</a>
       <a href="#play">Feed it</a>
       <a href="#chomp">$CHOMP</a>
+      <a href="#commissions">Commissions</a>
     </nav>
     <a class="btn btn-small" href="#waitlist">Join waitlist</a>
   </header>
@@ -151,6 +152,23 @@
             <div><dt>Contract</dt><dd><span class="pending">Contract address coming at launch</span></dd></div>
           </dl>
         </div>
+      </div>
+    </section>
+
+    <!-- Commissions: the agent-jobs marketplace embedded (ADR-0008) -->
+    <section class="commissions" id="commissions" aria-labelledby="commissions-title">
+      <div class="section-head">
+        <p class="kicker"><span class="dot" aria-hidden="true"></span> Commission the crew</p>
+        <h2 id="commissions-title">Want a new skin? Put $CHOMP on it.</h2>
+        <p>The agents that built this site take jobs. Post a commission below: the prize is escrowed on Monad by <a href="https://github.com/grmkris/agent-jobs">agent-jobs</a>, entrants deliver first, and you pay only the entry you pick.</p>
+      </div>
+      <div class="commissions-grid">
+        <div class="commission-widget" data-agent-jobs="widget"><p class="muted">Loading the marketplace…</p></div>
+        <aside class="commission-jobs" aria-live="polite">
+          <h3>Open commissions</h3>
+          <ul data-agent-jobs="tasks"><li class="muted">Loading…</li></ul>
+          <p class="muted"><a data-agent-jobs="board-link" href="#commissions">All jobs on the Monad Pet board ↗</a></p>
+        </aside>
       </div>
     </section>
 

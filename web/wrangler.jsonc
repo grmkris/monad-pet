@@ -1,8 +1,18 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "monad-pet",
+  // The embedded-marketplace build of the site (agent-jobs ADR-0008). The launched `monad-pet` Worker is untouched.
+  "name": "monad-pet-embed",
+  "main": "src/worker.js",
   "compatibility_date": "2026-09-01",
+  "compatibility_flags": ["nodejs_compat"],
   "assets": {
-    "directory": "./public"
-  }
+    "directory": "./public",
+    "binding": "ASSETS"
+  },
+  "kv_namespaces": [
+    {
+      "binding": "ATTESTATIONS",
+      "id": "bd6477105f4041ceac1d886997c68e43"
+    }
+  ]
 }
